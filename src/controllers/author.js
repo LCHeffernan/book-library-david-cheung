@@ -9,13 +9,8 @@ exports.readAuthor = (req, res) => {
   helper.readItem(Author, req, res);
 };
 
-exports.searchAuthor = async (req, res) => {
-  try {
-    const rows = await Author.findAll({ where: req.body });
-    res.status(200).json(rows);
-  } catch (err) {
-    res.status(400).json(err.errors[0].message);
-  }
+exports.searchAuthor = (req, res) => {
+  helper.searchItem(Author, req, res);
 };
 
 exports.readSingleAuthor = (req, res) => {

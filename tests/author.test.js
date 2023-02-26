@@ -45,10 +45,6 @@ describe("/authors", () => {
           "We need a author in so that we can create one"
         );
       });
-
-      // ========================
-      // test unique value
-      // ========================
     });
   });
 

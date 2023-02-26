@@ -4,10 +4,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.STRING,
       unique: true,
-      // validate: {
-      //   notNull: { args: [true], msg: "Author is required" },
-      //   notEmpty: { args: [true], msg: "Author must not be empty" },
-      // },
       validate: {
         notNull: {
           args: [true],

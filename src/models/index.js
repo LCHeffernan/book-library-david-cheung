@@ -10,7 +10,7 @@ const setupDatabase = () => {
   const connection = new Sequelize(PGDATABASE, PGUSER, PGPASSWORD, {
     host: PGHOST,
     port: PGPORT,
-    dialect: "postgres", // sequelize for postgres sql
+    dialect: "postgres",
     logging: false,
   });
 

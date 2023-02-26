@@ -45,8 +45,6 @@ describe("/genres", () => {
           "We need a genre in so that we can create one"
         );
       });
-
-      // test unique value
     });
   });
 

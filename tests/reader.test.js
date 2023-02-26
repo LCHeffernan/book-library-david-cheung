@@ -4,7 +4,6 @@ const { Reader } = require("../src/models");
 const app = require("../src/app");
 
 describe("/readers", () => {
-  // before(async () => Reader.sequelize.sync());
   before(async () => await Reader.sequelize.sync({ force: true }));
 
   beforeEach(async () => {
@@ -29,7 +28,7 @@ describe("/readers", () => {
         });
         expect(newReaderRecord.name).to.equal("Elizabeth Bennet");
         expect(newReaderRecord.email).to.equal("future_ms_darcy@gmail.com");
-        // expect(newReaderRecord.password).to.equal("12345678");
+        // expect(newReaderRecord.password).to.equal(undefined);
       });
 
       it("name must be exist", async () => {
@@ -146,7 +145,7 @@ describe("/readers", () => {
           const expected = readers.find((a) => a.id === reader.id);
           expect(reader.name).to.equal(expected.name);
           expect(reader.email).to.equal(expected.email);
-          // expect(reader.password).to.equal(expected.password);
+          expect(reader.password).to.be.undefined;
         });
       });
     });
@@ -159,7 +158,6 @@ describe("/readers", () => {
         expect(response.status).to.equal(200);
         expect(response.body.name).to.equal(reader.name);
         expect(response.body.email).to.equal(reader.email);
-        // expect(response.body.password).to.equal(reader.password);
         expect(response.body.password).to.be.undefined;
       });
 
@@ -180,14 +178,14 @@ describe("/readers", () => {
 
         expect(response.status).to.equal(200);
         expect(response.body.email).to.equal("miss_e_bennet@gmail.com");
-        expect(response.body.password).to.be.undefined;
+        expect(response.body.password).to.equal(undefined);
 
         const updatedReaderRecord = await Reader.findByPk(reader.id, {
           raw: true,
         });
         expect(response.status).to.equal(200);
         expect(updatedReaderRecord.email).to.equal("miss_e_bennet@gmail.com");
-        // expect(updatedReaderRecord.password).to.be.undefined;
+        // expect(updatedReaderRecord.password).to.equal(undefined);
       });
 
       it("returns a 404 if the reader does not exist", async () => {

@@ -1,7 +1,6 @@
 const { Client } = require("pg");
 const path = require("path");
 
-// capture first command line argument passed to this script
 const envName = process.argv.slice(2)[0];
 
 const loadEnv = (envName) => {

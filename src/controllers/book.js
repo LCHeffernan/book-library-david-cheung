@@ -10,13 +10,8 @@ exports.readBook = (req, res) => {
   helper.readItem(Book, req, res);
 };
 
-exports.searchBook = async (req, res) => {
-  try {
-    const rows = await Book.findAll({ where: req.body });
-    res.status(200).json(rows);
-  } catch (err) {
-    res.status(400).json(err.errors[0].message);
-  }
+exports.searchBook = (req, res) => {
+  helper.searchItem(Book, req, res);
 };
 
 exports.readSingleBook = (req, res) => {

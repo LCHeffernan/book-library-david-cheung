@@ -9,13 +9,8 @@ exports.readGenre = (req, res) => {
   helper.readItem(Genre, req, res);
 };
 
-exports.searchGenre = async (req, res) => {
-  try {
-    const rows = await Genre.findAll({ where: req.body });
-    res.status(200).json(rows);
-  } catch (err) {
-    res.status(400).json(err.errors[0].message);
-  }
+exports.searchGenre = (req, res) => {
+  helper.searchItem(Genre, req, res);
 };
 
 exports.readSingleGenre = (req, res) => {
