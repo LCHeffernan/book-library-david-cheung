@@ -1,77 +1,84 @@
-async function createItem(item, req, res) {
-  const data = req.body;
+exports.createItem = async (model, req, res) => {
   try {
-    const row = await item.create(data);
-    res.status(201).json(row);
+    const row = await model.create(req.body);
+    const { password, ...rest } = row.toJSON();
+    return res.status(201).json(rest);
   } catch (err) {
+    // how to custom foreign key error message ?
     res.status(400).json(err.errors[0].message);
   }
-}
+};
 
-async function readItem(item, req, res) {
+exports.readItem = async (model, req, res) => {
+  let rows;
   try {
-    const rows = await item.findAll();
+    if (model.name === "Book") {
+      // rows = await model.findAll({ include: ["Author", "Genre"] });
+      rows = await model.findAll();
+    } else {
+      rows = await model.findAll({
+        modelName: "Reader",
+        attributes: { exclude: "password" },
+      });
+    }
     res.status(200).json(rows);
   } catch (err) {
     res.status(400).json(err.errors[0].message);
   }
-}
+};
 
-async function readSingleItem(item, req, res) {
-  const { id } = req.params;
+exports.getItemById = async (model, req, res) => {
+  let row;
+  const tableName = model.name.toLowerCase();
   try {
-    const row = await item.findByPk(id);
+    if (model.name === "Book") {
+      row = await model.findByPk(req.params.id, {
+        include: ["Author", "Genre"],
+      });
+    } else {
+      row = await model.findByPk(req.params.id, {
+        modelName: "Reader",
+        attributes: { exclude: "password" },
+      });
+    }
     if (row == null) {
-      const ulrArray = req.url.split("/");
       return res
         .status(404)
-        .json({ error: `The ${ulrArray[1].slice(0, -1)} could not be found.` });
+        .json({ error: `The ${tableName} could not be found.` });
     }
-    res.status(200).json(row);
+    return res.status(200).json(row);
   } catch (err) {
     res.status(400).json(err.errors[0].message);
   }
-}
+};
 
-async function patchItem(item, req, res) {
-  const itemId = req.params.id;
-  const updateData = req.body;
-  try {
-    const [rows] = await item.update(updateData, {
-      where: { id: itemId },
-    });
-    if (rows === 0) {
-      const ulrArray = req.url.split("/");
-      return res
-        .status(404)
-        .json({ error: `The ${ulrArray[1].slice(0, -1)} could not be found.` });
-    }
-    res.sendStatus(200);
-  } catch (err) {
-    res.status(400).json(err.errors[0].message);
-  }
-}
+exports.patchItem = async (model, req, res) => {
+  const tableName = model.name.toLowerCase();
+  await model
+    .update(req.body, { where: { id: req.params.id }, returning: true })
+    .then((rows) => {
+      if (rows[0] === 0) {
+        return res
+          .status(404)
+          .json({ error: `The ${tableName} could not be found.` });
+      }
+      const { password, ...rest } = rows[1][0].toJSON();
+      res.status(200).json(rest);
+    })
+    .catch((err) => res.status(400).json(err.errors[0].message));
+};
 
-async function deleteItem(item, req, res) {
-  const itemId = req.params.id;
-  try {
-    const rows = await item.destroy({ where: { id: itemId } });
-    if (rows === 0) {
-      const ulrArray = req.url.split("/");
-      return res
-        .status(404)
-        .json({ error: `The ${ulrArray[1].slice(0, -1)} could not be found.` });
-    }
-    res.sendStatus(204);
-  } catch (err) {
-    res.status(400).json(err.errors[0].message);
-  }
-}
-
-module.exports = {
-  createItem,
-  readItem,
-  readSingleItem,
-  patchItem,
-  deleteItem,
+exports.deleteItem = async (model, req, res) => {
+  const tableName = model.name.toLowerCase();
+  await model
+    .destroy({ where: { id: req.params.id } })
+    .then((rows) => {
+      if (rows === 0) {
+        return res
+          .status(404)
+          .json({ error: `The ${tableName} could not be found.` });
+      }
+      res.sendStatus(204);
+    })
+    .catch((err) => res.status(400).json(err.errors[0].message));
 };

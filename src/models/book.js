@@ -1,25 +1,21 @@
-module.exports = (connection, DataTypes) => {
+module.exports = (sequelize, DataTypes) => {
   const schema = {
     title: {
-      type: DataTypes.STRING,
       allowNull: false,
+      type: DataTypes.STRING,
       validate: {
-        notNull: { msg: "Title is required" },
-        notEmpty: { msg: "Title must not be empty" },
+        notNull: {
+          args: [true],
+          msg: "We need a book title",
+        },
+        notEmpty: {
+          args: [true],
+          msg: "The book title cannot be empty",
+        },
       },
     },
-    author: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: { msg: "Author is required" },
-        notEmpty: { msg: "Author must not be empty" },
-      },
-    },
-    genre: DataTypes.STRING,
     ISBN: DataTypes.STRING,
   };
 
-  const BookModel = connection.define("Book", schema);
-  return BookModel;
+  return sequelize.define("Book", schema);
 };

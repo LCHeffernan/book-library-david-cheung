@@ -1,16 +1,16 @@
-module.exports = (connection, DataTypes) => {
+module.exports = (sequelize, DataTypes) => {
   const schema = {
     name: {
-      type: DataTypes.STRING,
       allowNull: false,
+      type: DataTypes.STRING,
       validate: {
         notNull: { msg: "Name is required" },
         notEmpty: { msg: "Name must not be empty" },
       },
     },
     email: {
-      type: DataTypes.STRING,
       allowNull: false,
+      type: DataTypes.STRING,
       validate: {
         notNull: { msg: "Email is required" },
         notEmpty: { msg: "Email must not be empty" },
@@ -20,8 +20,8 @@ module.exports = (connection, DataTypes) => {
       },
     },
     password: {
-      type: DataTypes.STRING,
       allowNull: false,
+      type: DataTypes.STRING,
       validate: {
         notNull: { msg: "Password is required" },
         notEmpty: { msg: "Password must not be empty" },
@@ -33,6 +33,5 @@ module.exports = (connection, DataTypes) => {
     },
   };
 
-  const ReaderModel = connection.define("Reader", schema);
-  return ReaderModel;
+  return sequelize.define("Reader", schema);
 };
