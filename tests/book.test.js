@@ -42,8 +42,8 @@ describe("/books", () => {
         const response = await request(app).post("/books").send({
           title: "title001",
           ISBN: "isbn001",
-          AuthorId: author.body.id,
-          GenreId: genre.body.id,
+          authorId: author.body.id,
+          genreId: genre.body.id,
         });
         expect(response.status).to.equal(201);
 
@@ -52,16 +52,16 @@ describe("/books", () => {
         });
         expect(response.body.title).to.equal("title001");
         expect(newBookRecord.title).to.equal("title001");
-        expect(newBookRecord.AuthorId).to.equal(author.body.id);
-        expect(newBookRecord.GenreId).to.equal(genre.body.id);
+        expect(newBookRecord.authorId).to.equal(author.body.id);
+        expect(newBookRecord.genreId).to.equal(genre.body.id);
         expect(newBookRecord.ISBN).to.equal("isbn001");
       });
 
       it("title must be exist", async () => {
         const response = await request(app).post("/books").send({
           ISBN: "isbn001",
-          AuthorId: author.body.id,
-          GenreId: genre.body.id,
+          authorId: author.body.id,
+          genreId: genre.body.id,
         });
         expect(response.status).to.equal(400);
         expect(response.body).to.equal("We need a book title");
@@ -71,45 +71,45 @@ describe("/books", () => {
         const response = await request(app).post("/books").send({
           title: "",
           ISBN: "isbn001",
-          AuthorId: author.body.id,
-          GenreId: genre.body.id,
+          authorId: author.body.id,
+          genreId: genre.body.id,
         });
         expect(response.status).to.equal(400);
         expect(response.body).to.equal("The book title cannot be empty");
       });
 
-      it("AuthorId must be exist", async () => {
+      it("authorId must be exist", async () => {
         const response = await request(app).post("/books").send({
           title: "title001",
           ISBN: "isbn001",
-          GenreId: genre.body.id,
+          genreId: genre.body.id,
         });
         expect(response.status).to.equal(400);
         expect(response.body).to.equal("This Book must have an author");
       });
 
-      it("AuthorId must not be empty", async () => {
+      it("authorId must not be empty", async () => {
         const response = await request(app).post("/books").send({
           title: "title001",
           ISBN: "isbn001",
-          AuthorId: "",
-          GenreId: genre.body.id,
+          authorId: "",
+          genreId: genre.body.id,
         });
         expect(response.status).to.equal(400);
         expect(response.body).to.equal("This Book must have an author");
       });
 
-      xit("AuthorId must be existed in Author", async () => {
+      it("authorId must be existed in Authors table", async () => {
         const response = await request(app).post("/books").send({
           title: "title001",
           ISBN: "isbn001",
-          AuthorId: 999999,
-          GenreId: genre.body.id,
+          authorId: 999,
+          genreId: genre.body.id,
         });
-        console.log(">>>>>>>>>", response.status);
-        console.log(">>>>>>>>>", response.body);
-        // expect(response.status).to.equal(400);
-        // expect(response.body).to.equal("AuthorId must be existed in Author");
+        expect(response.status).to.equal(400);
+        expect(response.body).to.equal(
+          'Key (authorId)=(999) is not present in table "Authors".'
+        );
       });
     });
   });
@@ -121,38 +121,38 @@ describe("/books", () => {
       books = await Promise.all([
         Book.create({
           title: "title001",
-          AuthorId: 1,
-          GenreId: 1,
+          authorId: 1,
+          genreId: 1,
           ISBN: "isbn001",
         }),
         Book.create({
           title: "title002",
-          AuthorId: 2,
-          GenreId: 2,
+          authorId: 2,
+          genreId: 2,
           ISBN: "isbn002",
         }),
         Book.create({
           title: "title006",
-          AuthorId: 2,
-          GenreId: 3,
+          authorId: 2,
+          genreId: 3,
           ISBN: "isbn006",
         }),
         Book.create({
           title: "title003",
-          AuthorId: 3,
-          GenreId: 3,
+          authorId: 3,
+          genreId: 3,
           ISBN: "isbn003",
         }),
         Book.create({
           title: "title004",
-          AuthorId: 4,
-          GenreId: 3,
+          authorId: 4,
+          genreId: 3,
           ISBN: "isbn004",
         }),
         Book.create({
           title: "title005",
-          AuthorId: 5,
-          GenreId: 3,
+          authorId: 5,
+          genreId: 3,
           ISBN: "isbn005",
         }),
       ]);
@@ -167,8 +167,8 @@ describe("/books", () => {
         response.body.forEach((book) => {
           const expected = books.find((a) => a.id === book.id);
           expect(book.title).to.equal(expected.title);
-          expect(book.AuthorId).to.equal(expected.AuthorId);
-          expect(book.GenreId).to.equal(expected.GenreId);
+          expect(book.authorId).to.equal(expected.authorId);
+          expect(book.genreId).to.equal(expected.genreId);
           expect(book.ISBN).to.equal(expected.ISBN);
         });
       });
@@ -178,7 +178,7 @@ describe("/books", () => {
       it("gets all books records with selection", async () => {
         const response = await request(app)
           .post("/books/search")
-          .send({ AuthorId: 2 });
+          .send({ authorId: 2 });
 
         expect(response.status).to.equal(200);
         expect(response.body.length).to.equal(2);
@@ -189,7 +189,7 @@ describe("/books", () => {
       it("gets all books records with selection", async () => {
         const response = await request(app)
           .post("/books/search")
-          .send({ GenreId: 3 });
+          .send({ genreId: 3 });
 
         expect(response.status).to.equal(200);
         expect(response.body.length).to.equal(4);
@@ -200,7 +200,7 @@ describe("/books", () => {
       it("gets all books records with selection", async () => {
         const response = await request(app)
           .post("/books/search")
-          .send({ AuthorId: 4, GenreId: 3 });
+          .send({ authorId: 4, genreId: 3 });
 
         expect(response.status).to.equal(200);
         expect(response.body.length).to.equal(1);
@@ -214,8 +214,8 @@ describe("/books", () => {
 
         expect(response.status).to.equal(200);
         expect(response.body.title).to.equal(book.title);
-        expect(response.body.AuthorId).to.equal(book.AuthorId);
-        expect(response.body.GenreId).to.equal(book.GenreId);
+        expect(response.body.authorId).to.equal(book.authorId);
+        expect(response.body.genreId).to.equal(book.genreId);
         expect(response.body.ISBN).to.equal(book.ISBN);
       });
 
@@ -232,20 +232,20 @@ describe("/books", () => {
         const book = books[0];
         const response = await request(app)
           .patch(`/books/${book.id}`)
-          .send({ GenreId: 2 });
+          .send({ genreId: 2 });
 
         const updatedBookRecord = await Book.findByPk(book.id, {
           raw: true,
         });
 
         expect(response.status).to.equal(200);
-        expect(updatedBookRecord.GenreId).to.equal(2);
+        expect(updatedBookRecord.genreId).to.equal(2);
       });
 
       it("returns a 404 if the book does not exist", async () => {
         const response = await request(app)
           .patch("/books/12345")
-          .send({ GenreId: 2 });
+          .send({ genreId: 2 });
 
         expect(response.status).to.equal(404);
         expect(response.body.error).to.equal("The book could not be found.");
@@ -260,22 +260,24 @@ describe("/books", () => {
         expect(response.body).to.equal("The book title cannot be empty");
       });
 
-      it("AuthorId must not be empty", async () => {
+      it("authorId must not be empty", async () => {
         const book = books[0];
         const response = await request(app)
           .patch(`/books/${book.id}`)
-          .send({ AuthorId: "" });
+          .send({ authorId: "" });
         expect(response.status).to.equal(400);
         expect(response.body).to.equal("This Book must have an author");
       });
 
-      xit("AuthorId must be existed in Author", async () => {
+      it("authorId must be existed in Authors table", async () => {
         const book = books[0];
         const response = await request(app)
           .patch(`/books/${book.id}`)
-          .send({ AuthorId: 999999 });
+          .send({ authorId: 999 });
         expect(response.status).to.equal(400);
-        expect(response.body).to.equal("AuthorId must be existed in Author");
+        expect(response.body).to.equal(
+          'Key (authorId)=(999) is not present in table "Authors".'
+        );
       });
     });
 

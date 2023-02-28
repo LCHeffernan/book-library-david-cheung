@@ -4,8 +4,13 @@ exports.createItem = async (model, req, res) => {
     const { password, ...rest } = row.toJSON();
     return res.status(201).json(rest);
   } catch (err) {
-    // how to custom foreign key error message ?
-    res.status(400).json(err.errors[0].message);
+    if (err.errors) {
+      res.status(400).json(err.errors[0].message);
+    } else if (err.name === "SequelizeForeignKeyConstraintError") {
+      res.status(400).json(err.parent.detail);
+    } else {
+      res.status(400).json(err.name);
+    }
   }
 };
 
@@ -13,8 +18,7 @@ exports.readItem = async (model, req, res) => {
   let rows;
   try {
     if (model.name === "Book") {
-      // rows = await model.findAll({ include: ["Author", "Genre"] });
-      rows = await model.findAll();
+      rows = await model.findAll({ include: ["author", "genre"] });
     } else {
       rows = await model.findAll({
         modelName: "Reader",
@@ -42,7 +46,7 @@ exports.getItemById = async (model, req, res) => {
   try {
     if (model.name === "Book") {
       row = await model.findByPk(req.params.id, {
-        include: ["Author", "Genre"],
+        include: ["author", "genre"],
       });
     } else {
       row = await model.findByPk(req.params.id, {
@@ -63,18 +67,28 @@ exports.getItemById = async (model, req, res) => {
 
 exports.patchItem = async (model, req, res) => {
   const tableName = model.name.toLowerCase();
-  await model
-    .update(req.body, { where: { id: req.params.id }, returning: true })
-    .then((rows) => {
-      if (rows[0] === 0) {
-        return res
-          .status(404)
-          .json({ error: `The ${tableName} could not be found.` });
-      }
-      const { password, ...rest } = rows[1][0].toJSON();
-      res.status(200).json(rest);
-    })
-    .catch((err) => res.status(400).json(err.errors[0].message));
+
+  try {
+    const rows = await model.update(req.body, {
+      where: { id: req.params.id },
+      returning: true,
+    });
+    if (rows[0] === 0) {
+      return res
+        .status(404)
+        .json({ error: `The ${tableName} could not be found.` });
+    }
+    const { password, ...rest } = rows[1][0].toJSON();
+    res.status(200).json(rest);
+  } catch (err) {
+    if (err.errors) {
+      res.status(400).json(err.errors[0].message);
+    } else if (err.name === "SequelizeForeignKeyConstraintError") {
+      res.status(400).json(err.parent.detail);
+    } else {
+      res.status(400).json(err.name);
+    }
+  }
 };
 
 exports.deleteItem = async (model, req, res) => {

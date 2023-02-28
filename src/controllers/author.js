@@ -1,4 +1,4 @@
-const { Author } = require("../models");
+const { Author } = require("../models"); // model get from ../models/index.js
 const helper = require("../controllers/helper");
 
 exports.createAuthor = (req, res) => {

@@ -38,7 +38,7 @@ describe("/authors", () => {
 
       it("author must not be empty", async () => {
         const response = await request(app).post("/authors").send({
-          AuthorId: "",
+          authorId: "",
         });
         expect(response.status).to.equal(400);
         expect(response.body).to.equal(

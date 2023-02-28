@@ -32,6 +32,5 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
   };
-
   return sequelize.define("Reader", schema);
 };

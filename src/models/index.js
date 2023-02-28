@@ -14,13 +14,14 @@ const setupDatabase = () => {
     logging: false,
   });
 
+  // setup models
   const Reader = ReaderModel(connection, Sequelize);
   const Book = BookModel(connection, Sequelize);
   const Author = AuthorModel(connection, Sequelize);
   const Genre = GenreModel(connection, Sequelize);
 
   Book.belongsTo(Author, {
-    // as: "author",
+    as: "author", //  alias to model, so authorId will be created
     foreignKey: {
       allowNull: false,
       validate: {
@@ -28,11 +29,11 @@ const setupDatabase = () => {
         notEmpty: { msg: "This Book must have an author" },
       },
     },
-  }); // auto create new field AuthorId in Book table
-  Author.hasMany(Book);
+  });
+  // Author.hasMany(Book); << it will create foreign key AuthorId, please don't add it
 
   Book.belongsTo(Genre, {
-    // as: "genre",
+    as: "genre",
     foreignKey: {
       allowNull: false,
       validate: {
@@ -41,9 +42,11 @@ const setupDatabase = () => {
       },
     },
   });
-  Genre.hasMany(Book);
+  // Genre.hasMany(Book);  << it will create foreign key GenreId, please don't add it
 
-  connection.sync({ alter: true }); // not recommended for production-level software
+  // force models' schema sync to database
+  // not recommended for production-level software
+  connection.sync({ alter: true });
 
   return {
     Reader,
@@ -53,4 +56,5 @@ const setupDatabase = () => {
   };
 };
 
+// return model will be used in controllers
 module.exports = setupDatabase();
