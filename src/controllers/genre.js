@@ -1,4 +1,4 @@
-const { Genre } = require("../models"); // model get from ../models/index.js
+const { Genre } = require("../models");
 const helper = require("../controllers/helper");
 
 exports.createGenre = (req, res) => {

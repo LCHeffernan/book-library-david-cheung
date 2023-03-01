@@ -28,7 +28,6 @@ describe("/readers", () => {
         });
         expect(newReaderRecord.name).to.equal("Elizabeth Bennet");
         expect(newReaderRecord.email).to.equal("future_ms_darcy@gmail.com");
-        // expect(newReaderRecord.password).to.equal(undefined);
       });
 
       it("name must be exist", async () => {
@@ -185,7 +184,6 @@ describe("/readers", () => {
         });
         expect(response.status).to.equal(200);
         expect(updatedReaderRecord.email).to.equal("miss_e_bennet@gmail.com");
-        // expect(updatedReaderRecord.password).to.equal(undefined);
       });
 
       it("returns a 404 if the reader does not exist", async () => {

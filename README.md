@@ -8,67 +8,67 @@ Here are the user stories for the application:
 
 1. Create library account
 
-```
-As a library customer
-I want to create an account with my name, email address and password
-So I can list and borrow books from the online library
-```
+   ```
+   As a library customer
+   I want to create an account with my name, email address and password
+   So I can list and borrow books from the online library
+   ```
 
 2. Don't return library account password
 
-```
-As a library customer
-I want my password to not be returned from the API
-So my account is more secure
-```
+   ```
+   As a library customer
+   I want my password to not be returned from the API
+   So my account is more secure
+   ```
 
 3. Email validation on sign up
 
-```
-As a library customer
-I want to receive an error if the email address I sign up with is not valid
-So I can receive emails
-```
+   ```
+   As a library customer
+   I want to receive an error if the email address I sign up with is not valid
+   So I can receive emails
+   ```
 
 4. Password length validation on sign up
 
-```
-As a library customer
-I want to receive an error if the password I sign up with is less than 8 characters long
-So my account is secure
-```
+   ```
+   As a library customer
+   I want to receive an error if the password I sign up with is less than 8 characters long
+   So my account is secure
+   ```
 
 5. Add book listings for lending
 
-```
-As a book lender
-I want to be able to create a book listing on my account with a title, author, genre and ISBN number
-So people can loan out my books
-```
+   ```
+   As a book lender
+   I want to be able to create a book listing on my account with a title, author, genre and ISBN number
+   So people can loan out my books
+   ```
 
 6. Title and author should be mandatory
 
-```
-As a library customer
-I want all book listings to have at least a title and an author
-So I know what I'm looking at
-```
+   ```
+   As a library customer
+   I want all book listings to have at least a title and an author
+   So I know what I'm looking at
+   ```
 
 7. Display books for lending
 
-```
-As a library customer
-I want to see a list of all books
-So I can find books to borrow
-```
+   ```
+   As a library customer
+   I want to see a list of all books
+   So I can find books to borrow
+   ```
 
 8. Search for books by fields
 
-```
-As a library customer
-I want to be able to search for books with a specific title, author, genre or ISBN
-So I can find books I am interested in
-```
+   ```
+   As a library customer
+   I want to be able to search for books with a specific title, author, genre or ISBN
+   So I can find books I am interested in
+   ```
 
 ## Project setup
 
@@ -92,7 +92,7 @@ So I can find books I am interested in
    ```
 3. Environment variables
 
-   Create a `.env` file in the root of the repo with the following values:
+   Create a `.env` file for postman test:
 
    ```
    PGPASSWORD=password
@@ -103,7 +103,7 @@ So I can find books I am interested in
    PORT=3000
    ```
 
-   Create a `.env.test` file in the root of the repo with the following values:
+   Create a `.env.test` file for `npm test`:
 
    ```
    PGPASSWORD=password
@@ -118,96 +118,93 @@ So I can find books I am interested in
 
 ### Test by node
 
-1. use 'book_library_dev_test' database
+1. use `book_library_dev_test` database
 2. change to book-library directory
-3. run 'npm test' to execute the test
+3. run `npm test` to execute the test
 4. add test case to \*.test.js files
-5. run 'npm test' to execute the test again
+5. run `npm test` to execute the test again
 
 ### Test by Postman
 
-1. use 'book_library_dev' database
+1. use `book_library_dev` database
 2. change to book-library directory
-3. run 'npm start' to start testing
+3. run `npm start` to start testing
 4. input test cases in Postman and check results (remark: suggest to use \*.test.js test cases first, then you can add your own test case)
 5. Example:
 
-Add Author record:
-POST : http://localhost:3000/authors
-BODY/RAW/JSON :
-{
-"author":"J. K. Bowling"
-}
-Response Body:
+   Add Author record:
 
-```
-{
-"id": 1,
-"author": "J. K. Rowling",
-"createdAt": "2023-02-27T09:32:56.215Z",
-"updatedAt": "2023-02-27T09:32:56.215Z"
-}
-```
+   POST : http://localhost:3000/authors
 
-Add Genre record:
-POST : http://localhost:3000/genres
-BODY/RAW/JSON :
-{
-"genre":"Fiction"
-}
-Response Body:
+   BODY/RAW/JSON :
+   `{"author":"J. K. Bowling"}`
 
-```
-{
-"id": 1,
-"genre": "Fiction",
-"updatedAt": "2023-02-27T09:51:31.388Z",
-"createdAt": "2023-02-27T09:51:31.388Z"
-}
-```
+   Response Body:
 
-Add Book record:
-POST : http://localhost:3000/books
-BODY/RAW/JSON :
-{
-"title":"harry potter and the deathly hallows",
-"ISBN":"9780329499983",
-"AuthorId":1,
-"GenreId":1
-}
+   ```
+   {
+   "id": 1,
+   "author": "J. K. Rowling",
+   "createdAt": "2023-02-27T09:32:56.215Z",
+   "updatedAt": "2023-02-27T09:32:56.215Z"
+   }
+   ```
 
-```
-Response Body:
-{
-"id": 2,
-"title": "harry potter and the deathly hallows",
-"ISBN": "9780329499983",
-"AuthorId": 1,
-"GenreId": 1,
-"updatedAt": "2023-02-27T09:50:49.470Z",
-"createdAt": "2023-02-27T09:50:49.470Z"
-}
-```
+   Add Genre record:
 
-Add Reader record:
-POST : http://localhost:3000/readers
-BODY/RAW/JSON :
-{
-"name":"David Cheung",
-"email":"davidcheung@gmail.com",
-"password":"12345678"
-}
-Response Body:
+   POST : http://localhost:3000/genres
 
-```
-{
-"id": 1,
-"name": "David Cheung",
-"email": "davidcheung@gmail.com",
-"updatedAt": "2023-02-27T09:40:11.047Z",
-"createdAt": "2023-02-27T09:40:11.047Z"
-}
-```
+   BODY/RAW/JSON :`{"genre":"Fiction"}`
+
+   Response Body:
+
+   ```
+   {
+   "id": 1,
+   "genre": "Fiction",
+   "updatedAt": "2023-02-27T09:51:31.388Z",
+   "createdAt": "2023-02-27T09:51:31.388Z"
+   }
+   ```
+
+   Add Book record:
+
+   POST : http://localhost:3000/books
+
+   BODY/RAW/JSON :`{"title":"harry potter and the deathly hallows","ISBN":"9780329499983","AuthorId":1,"GenreId":1}`
+
+   Response Body:
+
+   ```
+   {
+   "id": 2,
+   "title": "harry potter and the deathly hallows",
+   "ISBN": "9780329499983",
+   "AuthorId": 1,
+   "GenreId": 1,
+   "updatedAt": "2023-02-27T09:50:49.470Z",
+   "createdAt": "2023-02-27T09:50:49.470Z"
+   }
+   ```
+
+   Add Reader record:
+
+   POST : http://localhost:3000/readers
+
+   BODY/RAW/JSON :
+   `{"name":"David Cheung","email":"davidcheung@gmail.com","password":"12345678"}`
+
+   Response Body:
+
+   ```
+   {
+   "id": 1,
+   "name": "David Cheung",
+   "email": "davidcheung@gmail.com",
+   "updatedAt": "2023-02-27T09:40:11.047Z",
+   "createdAt": "2023-02-27T09:40:11.047Z"
+   }
+   ```
 
 ## Credits
 

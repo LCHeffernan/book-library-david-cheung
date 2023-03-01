@@ -1,4 +1,4 @@
-const { Reader } = require("../models"); // model get from ../models/index.js
+const { Reader } = require("../models");
 const helper = require("../controllers/helper");
 
 exports.createReader = (req, res) => {

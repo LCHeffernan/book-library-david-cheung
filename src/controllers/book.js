@@ -1,4 +1,4 @@
-const { Book } = require("../models"); // model get from ../models/index.js
+const { Book } = require("../models");
 const helper = require("../controllers/helper");
 const { json } = require("body-parser");
 
